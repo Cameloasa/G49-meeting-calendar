@@ -10,8 +10,8 @@ public interface MeetingDao {
     Meeting createMeeting(Meeting meeting);
 
     Optional<Meeting> findById(int id);
-
+    //select * from meeting where calendar_id = ?;
     Collection<Meeting> findAllMeetingsByCalendarId(int calendarId);
 
-    boolean deleteMeeting(int id);
+    boolean deleteMeeting(int meetingId);
 }
