@@ -10,10 +10,12 @@ public class Calendar {
     private List<Meeting> meetings;
 
     public Calendar(String title , String username) {
-        this(id, title, username);
+        this.title = title;
         this.username = username;
 
     }
+
+
     public Calendar(int id, String title, String username, List<Meeting> meetings) {
         this(title,username);
         this.id = id;
