@@ -29,6 +29,10 @@ public class User {
 
     //getters and setters
 
+    public String getPassword() {
+        return password;
+    }
+
     public String getUsername() {
         return username;
     }
