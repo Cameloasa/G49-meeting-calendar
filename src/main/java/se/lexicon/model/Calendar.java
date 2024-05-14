@@ -10,7 +10,7 @@ public class Calendar {
     private List<Meeting> meetings;
 
     public Calendar(String title , String username) {
-        this(title);
+        this(id, title, username);
         this.username = username;
 
     }
@@ -21,7 +21,7 @@ public class Calendar {
     }
 
 
-    public Calendar(String title) {
+    public Calendar(int id, String title, String username) {
         this.title = title;
     }
 
@@ -39,6 +39,10 @@ public class Calendar {
 
     public List<Meeting> getMeetings() {
         return meetings;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     //method for adding meetings

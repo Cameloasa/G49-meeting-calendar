@@ -23,41 +23,37 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User createUser(String username) {
-        //create query here
-        String query = "INSERT INTO users (username, _password) VALUES (? , ?)";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            //Create a user
+        String query = "INSERT INTO users(username, _password) VALUES(?,?)";
+        try (
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+        ) {
             User user = new User(username);
             user.newPassword();
-            //set username
-            preparedStatement.setString(1, username);
-            //set password
+            preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getPassword());
 
             int affectedRows = preparedStatement.executeUpdate();
-            //check if user is created
             if (affectedRows == 0) {
                 throw new MySQLException("Creating user failed, no rows affected.");
             }
             return user;
         } catch (SQLException e) {
-            throw new MySQLException("Error occured while creating user: " + username);
+            throw new MySQLException("Error occurred while creating user: " + username);
         }
 
     }
 
     @Override
-    public Optional<User> findByUserName(String username) {
-        //create query here
+    public Optional<User> findByUsername(String username) {
         String query = "SELECT * FROM users WHERE username = ?";
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+        try (
+                PreparedStatement preparedStatement = connection.prepareStatement(query);
+        ) {
+            preparedStatement.setString(1, username);
             ResultSet resultSet = preparedStatement.executeQuery();
-            //check if there is a user
 
             if (resultSet.next()) {
-
                 String foundUsername = resultSet.getString("username");
                 String foundPassword = resultSet.getString("_password");
                 boolean foundExpired = resultSet.getBoolean("expired");
@@ -69,7 +65,7 @@ public class UserDaoImpl implements UserDao {
             }
 
         } catch (SQLException e) {
-            throw new MySQLException("Error occured while finding the user by username: " + username, e);
+            throw new MySQLException("Error occurred while finding the user by username: " + username, e);
         }
     }
 
@@ -101,7 +97,7 @@ public class UserDaoImpl implements UserDao {
             //step9: return true
             return true;
         } catch (SQLException e) {
-            throw new MySQLException("Error occured while authenticationg user by username" + user.getUsername());
+            throw new MySQLException("Error occurred while authentication user by username" + user.getUsername());
         }
     }
 }

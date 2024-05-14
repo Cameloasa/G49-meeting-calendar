@@ -42,7 +42,7 @@ public class User {
     }
 
     public String userInfo() {
-        return "username" + username + "password" + password ;
+        return "username: " + username + " ,password: " + password ;
 
     }
 

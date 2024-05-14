@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface CalendarDao {
 
-    Calendar createCalendar(String title, String username);
+    Calendar createCalendar(String username, String title);
 
     Optional<Calendar> findById(int id);
 
