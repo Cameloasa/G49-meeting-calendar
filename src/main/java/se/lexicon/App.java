@@ -3,9 +3,9 @@ import java.lang.System;
 
 
 import se.lexicon.data.CalendarDao;
-import se.lexicon.dao.UserDao;
+
 import se.lexicon.dao.db.MeetingCalendarDBConnection;
-import se.lexicon.dao.impl.CalendarDaoImpl;
+import se.lexicon.data.impl.CalendarDaoImpl;
 import se.lexicon.dao.impl.UserDaoImpl;
 import se.lexicon.model.Calendar;
 import se.lexicon.model.User;
@@ -16,7 +16,7 @@ public class App
 {
     public static void main( String[] args ) {
 
-        UserDao userDao = new UserDaoImpl(MeetingCalendarDBConnection.getConnection());
+        se.lexicon.dao.UserDao userDao = new UserDaoImpl(MeetingCalendarDBConnection.getConnection());
         //User createdUser = userDao.createUser("testuser");
         //User createdUser2 = userDao.createUser("testuser2");
         //System.out.println("userInfo = " + createdUser2.userInfo());

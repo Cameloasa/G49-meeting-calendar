@@ -1,4 +1,4 @@
-package se.lexicon.dao;
+package se.lexicon.data;
 
 import se.lexicon.model.Meeting;
 
@@ -10,7 +10,7 @@ public interface MeetingDao {
     Meeting createMeeting(Meeting meeting);
 
     Optional<Meeting> findById(int id);
-    //select * from meeting where calendar_id = ?;
+
     Collection<Meeting> findAllMeetingsByCalendarId(int calendarId);
 
     boolean deleteMeeting(int meetingId);
