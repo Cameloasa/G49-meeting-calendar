@@ -1,6 +1,6 @@
-package se.lexicon.data.impl;
+package se.lexicon.dao.impl;
 
-import se.lexicon.data.UserDao;
+import se.lexicon.dao.UserDao;
 import se.lexicon.exceptions.AuthenticationFieldsException;
 import se.lexicon.exceptions.MySQLException;
 import se.lexicon.exceptions.UserExpiredException;

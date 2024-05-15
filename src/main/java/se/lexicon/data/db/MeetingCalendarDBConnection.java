@@ -1,4 +1,4 @@
-package se.lexicon.data.db;
+package se.lexicon.dao.db;
 
 import se.lexicon.exceptions.DBConnectionException;
 

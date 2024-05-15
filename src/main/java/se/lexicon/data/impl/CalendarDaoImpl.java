@@ -31,16 +31,20 @@ public class CalendarDaoImpl implements CalendarDao {
             preparedStatement.setString(2, title);    // Use index 2 for the second parameter
             // Execute query
             int affectedRows = preparedStatement.executeUpdate();
+
             if (affectedRows == 0) {
                 throw new MySQLException("Creating calendar failed, no rows affected.");
             }
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                int id = generatedKeys.getInt(1);
-                return new Calendar(id, title, username);
-            } else {
-                throw new MySQLException("Creating calendar failed, no ID obtained.");
+
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    int id = generatedKeys.getInt(1);
+                    return new Calendar(id, title, username);
+                } else {
+                    throw new MySQLException("Creating calendar failed, no ID obtained.");
+                }
             }
+
         } catch (SQLException e) {
             throw new MySQLException("Error occurred while creating calendar: " + title, e);
         }
@@ -55,56 +59,68 @@ public class CalendarDaoImpl implements CalendarDao {
             preparedStatement.setInt(1, id);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
+                    //Get the values
                     String username = resultSet.getString("username");
                     String title = resultSet.getString("title");
                     return Optional.of(new Calendar(id, title, username));
-                } else {
-                    return Optional.empty();
-                }
+
+            }
             }
         } catch (SQLException e) {
-            throw new MySQLException("Error occurred while finding the calendar by id: " + id, e);
+                throw new MySQLException("Error occurred while finding the calendar by id: " + id, e);
+
         }
+        return Optional.empty();
     }
 
     @Override
     public Optional<Calendar> findByTitle(String title) {
         //Create a query
         String query = "SELECT * FROM calendars WHERE title = ?";
+        Calendar calendar = null;
+
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, title);
+
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
+
                     int id = resultSet.getInt("id");
                     String username = resultSet.getString("username");
-                    return Optional.of(new Calendar(id, title, username));
-                } else {
-                    return Optional.empty();
+                    calendar = new Calendar(id, title, username);
                 }
-            }
+                }
+
         } catch (SQLException e) {
             throw new MySQLException("Error occurred while finding the calendar by title: " + title, e);
         }
+        return Optional.ofNullable(calendar);
     }
 
     @Override
     public Collection<Calendar> findCalendarsByUsername(String username) {
         //Create a query
         String query = "SELECT * FROM calendars WHERE username = ?";
+        //Create a list of calendars
+        List<Calendar> calendars = new ArrayList<>();
+        //Try to execute the query using prepared statement
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, username);
+
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                List<Calendar> calendars = new ArrayList<>();
+                //Loop through the result set
                 while (resultSet.next()) {
+
                     int id = resultSet.getInt("id");
                     String title = resultSet.getString("title");
                     calendars.add(new Calendar(id, title, username));
                 }
-                return calendars;
+
             }
         } catch (SQLException e) {
             throw new MySQLException("Error occurred while finding the calendars by username: " + username, e);
         }
+        return calendars;
     }
 
     @Override
@@ -117,15 +133,15 @@ public class CalendarDaoImpl implements CalendarDao {
             preparedStatement.setInt(1, id);
             //Execute query
             int affectedRows = preparedStatement.executeUpdate();
+
             // Check if any rows were affected
-            if (affectedRows == 0) {
-                throw new MySQLException("Deleting calendar failed, no rows affected.");
-            }
+            return affectedRows > 0;// Return true if any rows were affected
+
 
         } catch (SQLException e) {
             throw new MySQLException("Error occurred while deleting the calendar by id: " + id, e);
         }
-        return false;
+
     }
 
 

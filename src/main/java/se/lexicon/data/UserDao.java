@@ -1,4 +1,4 @@
-package se.lexicon.data;
+package se.lexicon.dao;
 
 import se.lexicon.exceptions.AuthenticationFieldsException;
 import se.lexicon.exceptions.UserExpiredException;
