@@ -2,10 +2,10 @@ package se.lexicon;
 import java.lang.System;
 
 
-import se.lexicon.data.CalendarDao;
+import se.lexicon.dao.CalendarDao;
 
 import se.lexicon.dao.db.MeetingCalendarDBConnection;
-import se.lexicon.data.impl.CalendarDaoImpl;
+import se.lexicon.dao.impl.CalendarDaoImpl;
 import se.lexicon.dao.impl.UserDaoImpl;
 import se.lexicon.model.Calendar;
 import se.lexicon.model.User;
