@@ -4,48 +4,52 @@ import java.lang.System;
 
 import se.lexicon.dao.CalendarDao;
 
+import se.lexicon.dao.UserDao;
 import se.lexicon.dao.db.MeetingCalendarDBConnection;
 import se.lexicon.dao.impl.CalendarDaoImpl;
 import se.lexicon.dao.impl.UserDaoImpl;
+import se.lexicon.exceptions.AuthenticationFieldsException;
+import se.lexicon.exceptions.UserExpiredException;
 import se.lexicon.model.Calendar;
 import se.lexicon.model.User;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Optional;
 
 public class App
 {
     public static void main( String[] args ) {
 
-        se.lexicon.dao.UserDao userDao = new UserDaoImpl(MeetingCalendarDBConnection.getConnection());
-        //User createdUser = userDao.createUser("testuser");
-        //User createdUser2 = userDao.createUser("testuser2");
-        //System.out.println("userInfo = " + createdUser2.userInfo());
+        // Establish database connection
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/meeting_calendar_db", "username", "password")) {
+            // Create UserDao instance
+            UserDao userDao = new UserDaoImpl(connection);
 
-        Optional<User> userOptional = userDao.findByUsername("testuser");
-        if(userOptional.isPresent()){
-            System.out.println(userOptional.get().userInfo());}
+            // Test createUser method
+            User newUser = userDao.createUser("TestUser");
+            System.out.println("New user created: " + newUser.getUsername());
+
+            // Test findByUsername method
+            Optional<User> userOptional = userDao.findByUsername("TestUser");
+            userOptional.ifPresent(user -> System.out.println("Found user by username: " + user.getUsername()));
+
+            // Test authenticate method
+            User user = new User("TestUser", "password");
+            boolean isAuthenticated = userDao.authenticate(user);
+            System.out.println("Authentication result: " + isAuthenticated);
+
+        } catch (SQLException | UserExpiredException | AuthenticationFieldsException e) {
+            e.printStackTrace();
+        }
     }
-    //Create a new calendar
-    Calendar calendar = new Calendar( "testcalendar", "testuser");
-
-    //Create CalendarDao
-    CalendarDao calendarDao = new CalendarDaoImpl(MeetingCalendarDBConnection.getConnection());
-
-    // Call the createCalendar method and store the returned value in createdCalendar
-    Calendar createdCalendar = calendarDao.createCalendar("username", "title");
-
-// Check if createdCalendar is not null before printing
-    //if (createdCalendar != null) {
-    // Print the createdCalendar object
-    //System.out.println("createdCalendar = " + createdCalendar);
-//}   else {
-    //System.out.println("Failed to create calendar."); // Print a message if createdCalendar is null
-
-    //Find calendar by id
-    //Optional<Calendar> calendarOptional = calendarDao.findById(createdCalendar.getId());
 
 
-}
+
+    }
+
+
 
 
 
