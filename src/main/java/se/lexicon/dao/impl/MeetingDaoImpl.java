@@ -6,6 +6,7 @@ import se.lexicon.model.Calendar;
 import se.lexicon.model.Meeting;
 
 import java.sql.*;
+import java.sql.Connection;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
