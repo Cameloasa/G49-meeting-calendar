@@ -1,5 +1,9 @@
 package se.lexicon.model;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import se.lexicon.exceptions.AuthenticationFailedException;
+import se.lexicon.exceptions.AuthenticationFieldsException;
+
 import java.util.Random;
 
 public class User {
@@ -44,6 +48,23 @@ public class User {
     public String userInfo() {
         return "username: " + username + " ,password: " + password ;
 
+    }
+
+
+    //Hash the password
+    public String hashPassword() {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+       return passwordEncoder.encode(this.password);
+    }
+
+
+    //compare the hashed passcode to a raw passcode return boolean
+    public void checkPassword(String hashedPassword) throws AuthenticationFailedException {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        boolean isEqual = passwordEncoder.matches(this.password, hashedPassword);
+        if (!isEqual) {
+            throw new AuthenticationFailedException("Authentication failed. Invalid credentials.");
+        }
     }
 
     //method for generate random passwords

@@ -1,6 +1,7 @@
 package se.lexicon.dao.impl;
 
 import se.lexicon.dao.UserDao;
+import se.lexicon.exceptions.AuthenticationFailedException;
 import se.lexicon.exceptions.AuthenticationFieldsException;
 import se.lexicon.exceptions.MySQLException;
 import se.lexicon.exceptions.UserExpiredException;
@@ -71,7 +72,7 @@ public class UserDaoImpl implements UserDao {
 
 
     @Override
-    public boolean authenticate(User user) throws UserExpiredException, AuthenticationFieldsException {
+    public boolean authenticate(User user) throws UserExpiredException, AuthenticationFailedException {
         //step1: define a select query
         String query = "SELECT * FROM users WHERE username = ? and _password = ?";
         //step2: prepared statement
@@ -92,7 +93,7 @@ public class UserDaoImpl implements UserDao {
                     throw new UserExpiredException("User is expired. username: " + user.getUsername());
                 }
             } else { //step8: else if the result set was null -> throw exception
-                throw new AuthenticationFieldsException("Authentication failed. Invalid credentials.");
+                throw new AuthenticationFailedException("Authentication failed. Invalid credentials.");
             }
             //step9: return true
             return true;
